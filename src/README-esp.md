@@ -15,3 +15,10 @@ Los datos de este proyecto provienen de Kaggle, del dataset Advanced Stock Datas
 En total, el dataset contiene más de 600 000 registros diarios con 73 características que incluyen precios (Open, High, Low, Close), volumen, indicadores técnicos como medias móviles y RSI, métricas de volatilidad y múltiples variables con información histórica rezagada (lags), lo que lo hace adecuado para tareas de predicción de retornos, clasificación direccional y análisis de riesgo en machine learning financiero.
 Enlace WEB del data set:
 https://www.kaggle.com/datasets/baidalinadilzhan/advanced-stock-dataset?resource=download
+
+
+
+
+* Sacar los datos para usar la app de:
+https://es.tradingview.com/markets/indices/quotes-us/
+https://es.finance.yahoo.com/quote/%5EGSPC/
