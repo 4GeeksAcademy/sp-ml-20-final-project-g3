@@ -22,3 +22,4 @@ https://www.kaggle.com/datasets/baidalinadilzhan/advanced-stock-dataset?resource
 * Sacar los datos para usar la app de:
 https://es.tradingview.com/markets/indices/quotes-us/
 https://es.finance.yahoo.com/quote/%5EGSPC/
+https://es.tradingview.com/symbols/SPX/technicals/
