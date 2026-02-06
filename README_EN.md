@@ -2,7 +2,7 @@
 
 This project consists of developing a machine learning model to predict whether a stock in the S&P 500 index will increase its price by at least 1% over the next 10 trading days. Historical data and technical market indicators are used to identify patterns that anticipate short-term positive price movements.
 
-Multiple machine learning models were tested, including XGBoost and Random Forest, which were selected as the final models for optimization and deployment in a web application using Streamlit. This application allows the user to choose between both models to make real-time predictions.
+Multiple machine learning models were tested, including Gradient and Random Forest, which were selected as the final models for optimization and deployment in a web application using Streamlit. This application allows the user to choose between both models to make real-time predictions.
 
 ---
 
@@ -82,9 +82,9 @@ SP-ML-20-FINAL-PROJECT-G3/
 ## 🌐 Web Application
 
 To run the application locally, use the following command from the project root:
-
+```
 streamlit run webapp/app.py
-
+```
 ---
 
 
