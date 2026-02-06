@@ -1,119 +1,113 @@
-# Machine Learning Final Project
+# 📈 Predicción de Retorno a 10 Días
 
-This is the final project of our Machine Learning bootcamp, where we demonstrate the skills and knowledge acquired throughout our studies. Throughout this bootcamp, we have studied different models based on projects of different areas and types. Now it's time to create our own project using the algorithm that we think is best suited to our problem.
+Este proyecto consiste en desarrollar un modelo de machine learning para predecir si una acción del índice S&P 500 aumentará su precio en al menos un 1% durante los próximos 10 días hábiles. Para ello, se utilizan datos históricos y variables técnicas de mercado con el fin de identificar patrones que anticipen movimientos positivos en el corto plazo.
 
-We will have to find a suitable dataset to work with, process it, train a model and finally make it available for consumption.
+Se probaron múltiples modelos de machine learning, entre ellos XGBoost y Random Forest, que son los dos seleccionados como finales para su optimización y despliegue en una aplicación web mediante Streamlit. Esta aplicación permite al usuario elegir entre ambos modelos para hacer predicciones en tiempo real.
 
-> *"Hard work always beats talent when talent doesn't work hard"* - Tim Notke
+---
 
-## 👥  Credits
+## 👥 Créditos
 
-**Team Members:**
-> - Member 1
-> - Member 2
-> - Member 3
+**Colaboradores:**  
+- Josefina Aispuro Merelles  
+- Saray Ruiz Ruiz  
+- Guillermo Rafael Lugo Ramos  
 
-**Academy:** 
-> - [4Geeks Academy](https://4geeksacademy.com/us/index) 
-> - **Bootcamp:** Spain-DS-17 
-> - **Mentor:** [Ing. Héctor Chocobar Torrejón](https://github.com/hchocobar/)
-> - **Teacher Assitant:** [Beatriz Solana Ros](https://github.com/mezcolantriz)
+---
 
-## 🎯 Project Goal
+## 🎯 Objetivo del Proyecto
 
-The goal of this project is to develop a complete end-to-end Machine Learning solution that includes:
-- Data acquisition and processing
-- Exploratory Data Analysis (EDA)
-- Model development and optimization
-- Web application deployment
-- Real-world problem-solving through ML techniques
+Crear un modelo de clasificación binaria que indique si una acción tendrá un retorno positivo mayor o igual al 1% en los siguientes 10 días, basándose en indicadores técnicos, volumen, volatilidad y datos históricos ajustados.
 
-## 🚀 Project Overview
+---
 
-*[This section will be updated as we define our specific project scope and objectives]*
+## 📊 Descripción de los Datos
 
-### Problem Statement
-*To be defined - we will identify a real-world problem that can be solved using Machine Learning techniques*
+Los datos utilizados provienen del dataset "Advanced Stock Dataset" disponible en Kaggle, construido con información histórica del Yahoo Finance API para las empresas del S&P 500 en aproximadamente los últimos cinco años.
 
-### Dataset
-*To be defined - we will acquire a dataset that meets the following minimum requirements:*
-- 60,000+ instances (rows)
-- 20+ predictor variables (including at least 1 categorical variable)
+El dataset contiene más de 620,000 registros diarios y 73 características, incluyendo precios ajustados, indicadores técnicos como medias móviles, RSI, MACD, volatilidad, y variables rezagadas para capturar la dinámica temporal. La variable objetivo es binaria y representa si el retorno acumulado en los próximos 10 días supera el 1%.
 
-### Methodology
-*To be defined - we will document our chosen approach and algorithms*
+---
 
-### Results
-*To be updated with our findings and model performance*
-
-## 📝 Project Phases
-
-### Step 1: Problem Definition
-Start by defining a problem and turn it into a Machine Learning problem. This is the first step, since the data must meet a certain need and the Machine Learning process must aim at satisfying that need.
-
-The choice of the data set must satisfy minimum requirements in terms of number of rows and predictor variables. At a minimum, it must contain:
-- 60,000 instances (rows)
-- 20 predictor variables, of which there must be at least 1 categorical variable
-
-**NOTE:** Depending on the dataset and the case study to be explored, datasets that do not reach the established minimum may be evaluated and accepted.
-
-### Step 2: Acquiring and Loading the Data Set
-Since in the real world data does not usually arrive in a flat csv file, this data must be acquired by one of the following ways:
-- Extracting data from some web page or portal using web scraping techniques
-- Exploitation of a public database using SQL language (the database must support this language)
-- Exploitation of a public API to obtain data
-
-Once you have the data, you must store it in a CSV document and load it into Python using Pandas.
-
-**NOTE:** Depending on the dataset and the case study to be explored, datasets downloaded by other means could be evaluated and accepted.
-
-### Step 3: Store the Information
-A widely used practice is to store the data, especially if they are massive, in a database for quick access to them. From all the databases we have studied, choose the one most compatible with your data and store it there. Then, perform queries using Python (with pure SQL code or using the wrappers we have studied in the course) to use the different statements: SELECT, JOIN, INSERT.... These queries must provide a value to start the analysis on the data prior to the statistics and EDA.
-
-It is important to understand that in the real world we do not only have CSV as an ally to store data, since it is easier to lose a flat file like CSV than a database with its connections and data models inside. Security is also a critical and important factor for storing your data there, since a CSV does not provide any protection mechanism that other technologies do.
-
-### Step 4: Perform a Descriptive Analysis
-The raw data stored in a database can be a great and very valuable source of information. Before we begin to simplify and exploit them with EDA, we must know their fundamental statistical measures: means, modes, distributions, deviations, etcetera. Analyze the descriptive statistical variables of each of the predictors of the data set and theorize about the distribution that each of them follows.
-
-Use hypothesis tests if you consider it necessary.
-
-### Step 5: Perform a Full EDA
-This step is vital to ensure that we keep the variables that are strictly necessary and eliminate those that are not relevant or do not provide information. Use the example Notebook we worked on and adapt it to this use case.
-
-Make sure to conveniently divide the data set into train and test as we have seen in previous lessons.
-
-### Step 6: Build the Model and Optimize It
-Once you have your data ready, decide which model fits best and train it. If in doubt, try using several of the ones you have already studied. Select the one that best fits the data.
-
-Remember that the hyperparameter optimization step is very important to explore and achieve the best version of the model.
-
-### Step 7: Deploy the Model
-Create a Machine Learning web application using your saved model. You can use Flask, Streamlit or any other tool you know. Use Heroku, Render or another cloud computing platform of your choice to deploy your web application and share it with the world. Remember that the application is going to be the gateway to potential users or customers, and you have to take care of even the smallest detail.
-
-## 📁 Project Structure
+## 🗂 Estructura del Proyecto
 
 ```
-ml-project-repo/
-├── 📁 data/                # Raw and processed datasets
-│    ├── 📁 interin/        # For intermediate data that has been transformed.
-│    ├── 📁 processed/      # For the final data to be used for modeling.
-│    ├── 📁 raw/            # For raw data without any processing.
-├── 📁 database/            # SQL scripts and database configs
-├── 📁 docs/                # Documentation and presentation materials
-├── 📁 models/              # Trained model artifacts
-├── 📁 notebooks/           # Jupyter notebooks for EDA and analysis
-├── 📁 src/                 # Source code modules
-├── 📁 webapp/              # Flask/Streamlit application
+SP-ML-20-FINAL-PROJECT-G3/
+├── 📁 .vscode/           # Configuraciones de VSCode  
+├── 📁 data/  
+│   ├── 📁 processed/     # Datos procesados y listos para modelar  
+│   └── 📁 raw/           # Datos originales sin procesar  
+├── 📁 notebooks/  
+│   ├── 📁 EDAs-1/        # Análisis exploratorio objetivo principal  
+│   ├── 📁 EDAs-2/        # Análisis inicial para segundo objetivo (no finalizado)  
+│   ├── 📁 final-models/  # Modelos finales optimizados (Gradient Boosting y Random Forest)  
+│   └── 📁 test-models/   # Modelos probados durante experimentación  
+├── 📁 webapp/            # Código fuente de la app Streamlit  
+├── .gitignore            # Archivo para ignorar archivos en Git  
+├── README_ES.md          # Documentación en español  
+├── README_EN.md          # Documentación en inglés  
+└── requirements.txt      # Dependencias del proyecto  
 ```
 
-## 🛠️ Technologies Used
+---
 
-*[To be updated as we select our tech stack]*
+## 🛠 Tecnologías y Herramientas
 
-## 📊 Results
+- Python 3.10.11
+- `numpy`, `pandas`, `scikit-learn`, `xgboost`, `randomforest`, `streamlit`, entre otras librerías.  
+- Jupyter Notebooks para análisis y experimentación.  
+- Streamlit para despliegue web interactivo.
 
-*[To be updated with our model performance and insights]*
+---
 
-## 🌐 Live Demo
+## 🚀 Metodología
 
-*[Link to be added when the web application is deployed]*
+1. **Exploración y Análisis de Datos:**  
+   Análisis exhaustivo de las características y variables del dataset para comprender su comportamiento.
+
+2. **Preprocesamiento y Feature Engineering:**  
+   Limpieza, creación de variables técnicas y rezagadas que capturan patrones temporales.
+
+3. **Entrenamiento y Optimización de Modelos:**  
+   Se entrenaron varios modelos supervisados, seleccionando XGBoost y Random Forest como los más efectivos.
+
+4. **Evaluación de Resultados:**  
+   Validación mediante métricas de clasificación y análisis comparativo entre modelos.
+
+5. **Despliegue:**  
+   Desarrollo de una aplicación web en Streamlit que permite seleccionar modelo y predecir retornos.
+
+---
+
+## 🌐 Aplicación Web
+
+Para ejecutar la aplicación localmente, usar el siguiente comando desde la raíz del proyecto:
+
+streamlit run webapp/app.py
+
+---
+
+
+## 📋 Instalación y Uso
+
+Clonar el repositorio:
+```
+git clone <https://github.com/4GeeksAcademy/sp-ml-20-final-project-g3>
+```
+
+Instalar dependencias:
+```
+pip install -r requirements.txt
+```
+
+Ejecutar la aplicación Streamlit:
+```
+streamlit run webapp/app.py
+```
+
+---
+
+
+## 🤝 Agradecimientos
+
+Gracias a 4Geeks Academy por la formación y a nuestros mentores por su apoyo durante el desarrollo del proyecto.
