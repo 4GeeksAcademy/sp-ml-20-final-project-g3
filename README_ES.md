@@ -2,7 +2,7 @@
 
 Este proyecto consiste en desarrollar un modelo de machine learning para predecir si una acción del índice S&P 500 aumentará su precio en al menos un 1% durante los próximos 10 días hábiles. Para ello, se utilizan datos históricos y variables técnicas de mercado con el fin de identificar patrones que anticipen movimientos positivos en el corto plazo.
 
-Se probaron múltiples modelos de machine learning, entre ellos XGBoost y Random Forest, que son los dos seleccionados como finales para su optimización y despliegue en una aplicación web mediante Streamlit. Esta aplicación permite al usuario elegir entre ambos modelos para hacer predicciones en tiempo real.
+Se probaron múltiples modelos de machine learning, entre ellos Gradient y Random Forest, que son los dos seleccionados como finales para su optimización y despliegue en una aplicación web mediante Streamlit. Esta aplicación permite al usuario elegir entre ambos modelos para hacer predicciones en tiempo real.
 
 ---
 
@@ -82,9 +82,9 @@ SP-ML-20-FINAL-PROJECT-G3/
 ## 🌐 Aplicación Web
 
 Para ejecutar la aplicación localmente, usar el siguiente comando desde la raíz del proyecto:
-
+```
 streamlit run webapp/app.py
-
+```
 ---
 
 
