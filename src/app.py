@@ -1,38 +1,181 @@
 import streamlit as st
 import pandas as pd
-from pickle import load
+import joblib
+import os
 
-# Cargar modelo y columnas (ya definidas)
-model = load(open("models/xgb-model-eda4.pkl", "rb"))
-model_features = [
-    'Close', 'Volume', 'Ticker', 'EMA_12', 'MACD', 'MACD_Signal', 'RSI',
-    'BB_Upper', 'BB_Lower', 'BB_Position', 'Volatility', 'Price_Change',
-    'Volume_Ratio', 'Volume_lag_1', 'Volume_lag_2', 'Volume_lag_3',
-    'Volume_lag_5', 'Volume_lag_10', 'RSI_lag_1', 'MACD_lag_1',
-    'Volatility_lag_1', 'retorno_5d', 'volatilidad_10d', 'MACD_Bullish',
-    'RSI_Trend_Up', 'BB_Breakout', 'High_Volume_Signal'
-]
+# =============================
+# Configuración página
+# =============================
+st.set_page_config(
+    page_title="S&P 500 Prediction App",
+    page_icon="📈",
+    layout="centered"
+)
 
-st.title("Predicción de subida de precio al día siguiente")
-st.markdown("Sube un archivo CSV con las columnas necesarias para que el modelo prediga si el precio subirá al menos 1% mañana.")
+st.title("📈 S&P 500 Prediction App")
+st.write(
+    "Simula un escenario de mercado y obtén la probabilidad estimada "
+    "de subida para el próximo período."
+)
+
 st.divider()
 
-st.subheader("Columnas necesarias para el modelo")
-st.write(model_features)
+st.sidebar.header("⚙️ Configuración")
 
-uploaded_file = st.file_uploader("Sube tu CSV aquí", type=["csv"])
+selected_model = st.sidebar.selectbox(
+    "Selecciona el modelo",
+    ["XGBoost", "Random Forest"]
+)
 
-# Botón siempre visible
-if st.button("Predecir"):
-    if uploaded_file is None:
-        st.error("Primero debes subir un archivo CSV para habilitar la predicción.")
+# =============================
+# Rutas seguras
+# =============================
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+MODELS_PATH = os.path.abspath(
+    os.path.join(BASE_DIR, "..", "models")
+)
+
+model = joblib.load(
+    os.path.join(MODELS_PATH, "xgboost-model-final.pkl")
+)
+
+# =============================
+# Cargar modelo y scaler
+# =============================
+
+scaler = joblib.load(os.path.join(MODELS_PATH, "scaler.pkl"))
+model = joblib.load(os.path.join(MODELS_PATH, "xgboost-model-final.pkl"))
+
+
+@st.cache_resource
+def load_model():
+    return joblib.load(os.path.join(MODELS_PATH, "xgboost-model-final.pkl"))
+
+@st.cache_resource
+def load_scaler():
+    return joblib.load(os.path.join(MODELS_PATH, "scaler.pkl"))
+
+@st.cache_resource
+def load_pipeline(model_name):
+
+    if model_name == "XGBoost":
+        return joblib.load(os.path.join(MODELS_PATH, "xgb_pipeline.pkl"))
+
+    elif model_name == "Random Forest":
+        return joblib.load(os.path.join(MODELS_PATH, "rf_pipeline.pkl"))
+
+pipeline = load_pipeline(selected_model)
+
+
+# =============================
+# Inputs del usuario
+# =============================
+st.subheader("🔧 Introduce las variables del mercado")
+
+col1, col2 = st.columns(2)
+
+with col1:
+    price_change_5d = st.number_input(
+        "📈 Cambio precio 5 días (%)",
+        min_value=-50.0,
+        max_value=50.0,
+        value=0.0,
+        step=0.1
+    ) / 100
+
+    price_vs_sma20 = st.slider(
+        "📊 Precio vs SMA20 (%)",
+        min_value=-20.0,
+        max_value=20.0,
+        value=0.0,
+        step=0.1
+    ) / 100
+
+    volume_ratio = st.slider(
+        "🔊 Volumen relativo",
+        min_value=0.0,
+        max_value=5.0,
+        value=1.0,
+        step=0.1
+    )
+
+with col2:
+    rsi_label = st.selectbox(
+        "🚀 Fuerza RSI",
+        ["Débil (<40)", "Neutral (40-60)", "Fuerte (>60)"]
+    )
+
+    vol_level_label = st.selectbox(
+        "⚡ Nivel de volatilidad",
+        ["Baja", "Media", "Alta"]
+    )
+
+# =============================
+# Mapas categóricos
+# =============================
+rsi_map = {
+    "Débil (<40)": 0,
+    "Neutral (40-60)": 1,
+    "Fuerte (>60)": 2
+}
+
+vol_map = {
+    "Baja": 0,
+    "Media": 1,
+    "Alta": 2
+}
+
+# =============================
+# Botón predicción
+# =============================
+if st.button("🔍 Evaluar escenario"):
+
+    # Crear DataFrame con mismo orden de entrenamiento
+    X = pd.DataFrame([{
+        "Price_Change_5d": price_change_5d,
+        "price_vs_sma20": price_vs_sma20,
+        "rsi_strength": rsi_map[rsi_label],
+        "Volume_Ratio": volume_ratio,
+        "vol_level": vol_map[vol_level_label]
+    }])
+
+    feature_order = [
+        "Price_Change_5d",
+        "price_vs_sma20",
+        "rsi_strength",
+        "Volume_Ratio",
+        "vol_level"
+    ]
+
+    X = X[feature_order]
+
+    # 🔥 Escalar TODO (porque así entrenaste)
+    X_scaled = pd.DataFrame(
+        scaler.transform(X),
+        columns=X.columns
+    )
+
+    # Predicción
+    prob_up = model.predict_proba(X_scaled)[0, 1]
+    prob_down = model.predict_proba(X_scaled)[0, 0]
+
+    st.divider()
+    st.subheader("📊 Resultado")
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.metric("Probabilidad subida", f"{prob_up*100:.1f}%")
+
+    with col2:
+        st.metric("Probabilidad bajada", f"{prob_down*100:.1f}%")
+
+    if prob_up > 0.65:
+        st.success("🟢 Señal fuerte alcista")
+    elif prob_up > 0.5:
+        st.warning("🟡 Señal moderada")
     else:
-        input_data = pd.read_csv(uploaded_file)
-        missing_cols = [col for col in model_features if col not in input_data.columns]
-        if missing_cols:
-            st.error(f"Faltan columnas en el CSV: {missing_cols}")
-        else:
-            X_input = input_data[model_features]
-            prediction = model.predict(X_input)
-            st.write("Predicciones:")
-            st.write(prediction)
+        st.error("🔴 Baja probabilidad de subida")
+
+    st.caption("⚠️ Esta herramienta es informativa y no constituye asesoramiento financiero.")
