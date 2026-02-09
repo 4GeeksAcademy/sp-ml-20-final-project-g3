@@ -2,13 +2,22 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 import joblib
+import os
 
 # =========================
 # Cargar modelo y scaler
 # =========================
-model = joblib.load("models\simple_model.pkl")
-scaler = joblib.load("models\scaler.pkl")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+modeds_path = os.path.abspath(
+    os.path.join(BASE_DIR, "..", "models")
+)
+skaler_patch = os.path.abspath(
+    os.path.join(BASE_DIR, "..", "models")
+)
 
+
+model = joblib.load(modeds_path)
+model = joblib.load(skaler_path)
 # =========================
 # Configuración página
 # =========================
