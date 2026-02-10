@@ -7,12 +7,12 @@ import os
 # Configuración página
 # =============================
 st.set_page_config(
-    page_title="S&P 500 Prediction App",
+    page_title="S&P 500 Movement Predictor",
     page_icon="📈",
     layout="centered"
 )
 
-st.title("📈 S&P 500 Prediction App")
+st.title("📈 S&P 500 Movement Predictor")
 st.write(
     "Simula un escenario de mercado y obtén la probabilidad estimada "
     "de subida para el próximo período."
@@ -20,15 +20,8 @@ st.write(
 
 st.divider()
 
-st.sidebar.header("⚙️ Configuración")
-
-selected_model = st.sidebar.selectbox(
-    "Selecciona el modelo",
-    ["XGBoost", "Random Forest"]
-)
-
 # =============================
-# Rutas seguras
+# Rutas
 # =============================
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -36,40 +29,54 @@ MODELS_PATH = os.path.abspath(
     os.path.join(BASE_DIR, "..", "models")
 )
 
-model = joblib.load(
-    os.path.join(MODELS_PATH, "xgboost-model-final.pkl")
+# =============================
+# Selector modelo
+# =============================
+st.sidebar.header("⚙️ Configuración")
+
+selected_model = st.sidebar.selectbox(
+    "Selecciona el modelo",
+    ["Gradient Boosting", "Random Forest"]
 )
+
+# =============================
+# Diccionario archivos
+# =============================
+MODEL_FILES = {
+    "Gradient Boosting": {
+        "model": "xgboost-model-final.pkl",
+        "scaler": "scaler.pkl"
+    },
+    "Random Forest": {
+        "model": "random-forest-model-final.pkl",
+        "scaler": "scaler.pkl"
+        
+    }
+}
 
 # =============================
 # Cargar modelo y scaler
 # =============================
-
-scaler = joblib.load(os.path.join(MODELS_PATH, "scaler.pkl"))
-model = joblib.load(os.path.join(MODELS_PATH, "xgboost-model-final.pkl"))
-
-
 @st.cache_resource
-def load_model():
-    return joblib.load(os.path.join(MODELS_PATH, "xgboost-model-final.pkl"))
+def load_model_and_scaler(model_name):
 
-@st.cache_resource
-def load_scaler():
-    return joblib.load(os.path.join(MODELS_PATH, "scaler.pkl"))
+    files = MODEL_FILES[model_name]
 
-@st.cache_resource
-def load_pipeline(model_name):
+    model = joblib.load(
+        os.path.join(MODELS_PATH, files["model"])
+    )
 
-    if model_name == "XGBoost":
-        return joblib.load(os.path.join(MODELS_PATH, "xgb_pipeline.pkl"))
+    scaler = joblib.load(
+        os.path.join(MODELS_PATH, files["scaler"])
+    )
 
-    elif model_name == "Random Forest":
-        return joblib.load(os.path.join(MODELS_PATH, "rf_pipeline.pkl"))
+    return model, scaler
 
-pipeline = load_pipeline(selected_model)
 
+model, scaler = load_model_and_scaler(selected_model)
 
 # =============================
-# Inputs del usuario
+# Inputs usuario
 # =============================
 st.subheader("🔧 Introduce las variables del mercado")
 
@@ -81,34 +88,50 @@ with col1:
         min_value=-50.0,
         max_value=50.0,
         value=0.0,
-        step=0.1
+        step=0.1,
+        format="%.3f",
+        help="""Representa cómo se ha comportado la acción durante los últimos 5 días.
+Si subió usa el valor en positivo
+Si bajó usa el valor en negativo"""
     ) / 100
 
-    price_vs_sma20 = st.slider(
+    price_vs_sma20 = st.number_input(
         "📊 Precio vs SMA20 (%)",
         min_value=-20.0,
         max_value=20.0,
-        value=0.0,
-        step=0.1
+        value=0.000,
+        step=0.001,
+        format="%.3f",
+        help="""Se calcula el precio de cierre entre la media movil simple 20 (SMA20) y al resultado se le resta 1. 
+Precio por encima → valor positivo,
+Precio por debajo → valor negativo."""
     ) / 100
 
-    volume_ratio = st.slider(
+    volume_ratio = st.number_input(
         "🔊 Volumen relativo",
         min_value=0.0,
         max_value=5.0,
         value=1.0,
-        step=0.1
+        step=0.1,
+        format="%.3f",
+        help="""Se calcula con el volumen actual divido entre el volumen promedio"""
     )
 
 with col2:
     rsi_label = st.selectbox(
         "🚀 Fuerza RSI",
-        ["Débil (<40)", "Neutral (40-60)", "Fuerte (>60)"]
+        ["Débil (<40)", "Neutral (40-60)", "Fuerte (>60)"],
+        help="""Representa la intensidad del impulso reciente.
+En TradingView usar RSI:
+RSI < 40 → Débil
+RSI 40–60 → Neutral
+RSI > 60 → Fuerte."""
     )
 
     vol_level_label = st.selectbox(
         "⚡ Nivel de volatilidad",
-        ["Baja", "Media", "Alta"]
+        ["Baja (<20)", "Media (20-25)", "Alta (>25)"],
+        help="""Para saber este indicador busca el simbolo VIX del S&P 500"""
     )
 
 # =============================
@@ -121,9 +144,9 @@ rsi_map = {
 }
 
 vol_map = {
-    "Baja": 0,
-    "Media": 1,
-    "Alta": 2
+    "Baja (<20)": 0,
+    "Media (20-25)": 1,
+    "Alta (>25)": 2
 }
 
 # =============================
@@ -131,7 +154,6 @@ vol_map = {
 # =============================
 if st.button("🔍 Evaluar escenario"):
 
-    # Crear DataFrame con mismo orden de entrenamiento
     X = pd.DataFrame([{
         "Price_Change_5d": price_change_5d,
         "price_vs_sma20": price_vs_sma20,
@@ -140,23 +162,13 @@ if st.button("🔍 Evaluar escenario"):
         "vol_level": vol_map[vol_level_label]
     }])
 
-    feature_order = [
-        "Price_Change_5d",
-        "price_vs_sma20",
-        "rsi_strength",
-        "Volume_Ratio",
-        "vol_level"
-    ]
-
+    # 🔥 MUY IMPORTANTE
+    # Forzar orden exacto del scaler
+    feature_order = list(scaler.feature_names_in_)
     X = X[feature_order]
 
-    # 🔥 Escalar TODO (porque así entrenaste)
-    X_scaled = pd.DataFrame(
-        scaler.transform(X),
-        columns=X.columns
-    )
+    X_scaled = scaler.transform(X)
 
-    # Predicción
     prob_up = model.predict_proba(X_scaled)[0, 1]
     prob_down = model.predict_proba(X_scaled)[0, 0]
 
@@ -166,10 +178,16 @@ if st.button("🔍 Evaluar escenario"):
     col1, col2 = st.columns(2)
 
     with col1:
-        st.metric("Probabilidad subida", f"{prob_up*100:.1f}%")
+        st.metric(
+            f"Probabilidad subida ({selected_model})",
+            f"{prob_up*100:.1f}%"
+        )
 
     with col2:
-        st.metric("Probabilidad bajada", f"{prob_down*100:.1f}%")
+        st.metric(
+            f"Probabilidad bajada ({selected_model})",
+            f"{prob_down*100:.1f}%"
+        )
 
     if prob_up > 0.65:
         st.success("🟢 Señal fuerte alcista")
