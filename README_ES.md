@@ -93,9 +93,9 @@ streamlit run webapp/app.py
 
 La aplicación obtiene datos del índice S&P 500 a partir de dos páginas web confiables, utilizando únicamente los indicadores necesarios para la predicción:
 
-TradingView – Análisis técnico del S&P 500 (SPX): se utilizan los indicadores Price Change 5D, Vol Ratio, Price vs SMA20, RSI Strength y Vol Level para construir las características del modelo. (https://es.tradingview.com/symbols/SPX/technicals/?exchange=SP)
+TradingView – (https://es.tradingview.com/symbols/SPX/technicals/?exchange=SP)
 
-Yahoo Finanzas – S&P 500 (^GSPC): proporciona los precios históricos y series de precios necesarias para calcular las predicciones de retorno a 10 días. (https://es.finance.yahoo.com/quote/%5EGSPC/)
+Yahoo Finanzas – (https://es.finance.yahoo.com/quote/%5EGSPC/)
 
 
 ---
