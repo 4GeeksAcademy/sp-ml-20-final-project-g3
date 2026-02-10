@@ -1,4 +1,4 @@
-# 📈 10-Day Return Prediction
+# 📈 S&P 500 10-Day Return Prediction
 
 This project consists of developing a machine learning model to predict whether a stock in the S&P 500 index will increase its price by at least 1% over the next 10 trading days. Historical data and technical market indicators are used to identify patterns that anticipate short-term positive price movements.
 
@@ -85,8 +85,20 @@ To run the application locally, use the following command from the project root:
 ```
 streamlit run webapp/app.py
 ```
+
 ---
 
+
+## 📊 Data Sources
+
+The application sources S&P 500 index data from two reliable web pages, using only the indicators required for the prediction:
+
+TradingView – (https://es.tradingview.com/symbols/SPX/technicals/?exchange=SP)
+
+Yahoo Finance – (https://es.finance.yahoo.com/quote/%5EGSPC/)
+
+
+---
 
 ## 📋 Installation and Usage
 
@@ -106,7 +118,6 @@ streamlit run webapp/app.py
 ```
 
 ---
-
 
 ## 🤝 Acknowledgements
 

@@ -1,4 +1,4 @@
-# 📈 Predicción de Retorno a 10 Días
+# 📈 S&P 500 Predicción de Retorno a 10 Días
 
 Este proyecto consiste en desarrollar un modelo de machine learning para predecir si una acción del índice S&P 500 aumentará su precio en al menos un 1% durante los próximos 10 días hábiles. Para ello, se utilizan datos históricos y variables técnicas de mercado con el fin de identificar patrones que anticipen movimientos positivos en el corto plazo.
 
@@ -85,8 +85,20 @@ Para ejecutar la aplicación localmente, usar el siguiente comando desde la raí
 ```
 streamlit run webapp/app.py
 ```
+
 ---
 
+
+## 📊 Fuentes de datos
+
+La aplicación obtiene datos del índice S&P 500 a partir de dos páginas web confiables, utilizando únicamente los indicadores necesarios para la predicción:
+
+TradingView – (https://es.tradingview.com/symbols/SPX/technicals/?exchange=SP)
+
+Yahoo Finanzas – (https://es.finance.yahoo.com/quote/%5EGSPC/)
+
+
+---
 
 ## 📋 Instalación y Uso
 
@@ -106,7 +118,6 @@ streamlit run webapp/app.py
 ```
 
 ---
-
 
 ## 🤝 Agradecimientos
 
