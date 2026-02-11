@@ -83,7 +83,8 @@ SP-ML-20-FINAL-PROJECT-G3/
 
 Para ejecutar la aplicación localmente, usar el siguiente comando desde la raíz del proyecto:
 ```
-streamlit run webapp/app.py
+cd webapp
+streamlit run app.py
 ```
 
 ---
@@ -93,9 +94,9 @@ streamlit run webapp/app.py
 
 La aplicación obtiene datos del índice S&P 500 a partir de dos páginas web confiables, utilizando únicamente los indicadores necesarios para la predicción:
 
-TradingView – (https://es.tradingview.com/symbols/SPX/technicals/?exchange=SP)
+TradingView – https://es.tradingview.com/symbols/SPX/technicals/?exchange=SP
 
-Yahoo Finanzas – (https://es.finance.yahoo.com/quote/%5EGSPC/)
+Yahoo Finanzas – https://es.finance.yahoo.com/quote/%5EGSPC/
 
 
 ---
@@ -114,7 +115,8 @@ pip install -r requirements.txt
 
 Ejecutar la aplicación Streamlit:
 ```
-streamlit run webapp/app.py
+cd webapp
+streamlit run app.py
 ```
 
 ---
