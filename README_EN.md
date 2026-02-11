@@ -83,7 +83,8 @@ SP-ML-20-FINAL-PROJECT-G3/
 
 To run the application locally, use the following command from the project root:
 ```
-streamlit run webapp/app.py
+cd webapp
+streamlit run app.py
 ```
 
 ---
@@ -93,9 +94,9 @@ streamlit run webapp/app.py
 
 The application sources S&P 500 index data from two reliable web pages, using only the indicators required for the prediction:
 
-TradingView – (https://es.tradingview.com/symbols/SPX/technicals/?exchange=SP)
+TradingView – https://es.tradingview.com/symbols/SPX/technicals/?exchange=SP
 
-Yahoo Finance – (https://es.finance.yahoo.com/quote/%5EGSPC/)
+Yahoo Finance – https://es.finance.yahoo.com/quote/%5EGSPC/
 
 
 ---
@@ -114,7 +115,8 @@ pip install -r requirements.txt
 
 Run the Streamlit application:
 ```
-streamlit run webapp/app.py
+cd webapp
+streamlit run app.py
 ```
 
 ---

@@ -15,17 +15,17 @@ st.divider()
 
 # Rutas
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-MODELS_PATH = os.path.abspath(os.path.join(BASE_DIR, '..', 'data', 'models'))
+MODELS_PATH = os.path.abspath(os.path.join(BASE_DIR, '..', 'models'))
 
 
 # Selector modelo
 st.sidebar.header('⚙️ Configuración')
 
-selected_model = st.sidebar.selectbox('Selecciona el modelo', ['Gradient Boosting', 'Random Forest'])
+selected_model = st.sidebar.selectbox('Selecciona el modelo', ['Gradient Boosting (Optimista)', 'Random Forest (Conservador)'])
 
 # Diccionario archivos
-MODEL_FILES = {'Gradient Boosting': {'model': 'gradient-model-final.pkl', 'scaler': 'scaler-model-final.pkl'}, 
-               'Random Forest': {'model': 'random-forest-model-final.pkl', 'scaler': 'scaler-model-final.pkl'}}
+MODEL_FILES = {'Gradient Boosting (Optimista)': {'model': 'gradient-model-final.pkl', 'scaler': 'scaler-model-final.pkl'}, 
+               'Random Forest (Conservador)': {'model': 'random-forest-model-final.pkl', 'scaler': 'scaler-model-final.pkl'}}
 
 
 # Cargar modelo y scaler
