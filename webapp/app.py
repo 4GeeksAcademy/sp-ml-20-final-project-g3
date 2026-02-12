@@ -4,7 +4,7 @@ import joblib
 import os
 
 
-# Configuración página
+# Page configuration
 st.set_page_config(page_title='S&P 500 Movement Predictor', page_icon='📈', layout='centered')
 
 st.title('📈 S&P 500 Movement Predictor')
@@ -13,22 +13,22 @@ st.write('''Simula un escenario de mercado y obtén la probabilidad estimada de 
 st.divider()
 
 
-# Rutas
+# Paths
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODELS_PATH = os.path.abspath(os.path.join(BASE_DIR, '..', 'models'))
 
 
-# Selector modelo
+# Model selector
 st.sidebar.header('⚙️ Configuración')
 
 selected_model = st.sidebar.selectbox('Selecciona el modelo', ['Gradient Boosting (Optimista)', 'Random Forest (Conservador)'])
 
-# Diccionario archivos
+# Model files dictionary
 MODEL_FILES = {'Gradient Boosting (Optimista)': {'model': 'gradient-model-final.pkl', 'scaler': 'scaler-model-final.pkl'}, 
                'Random Forest (Conservador)': {'model': 'random-forest-model-final.pkl', 'scaler': 'scaler-model-final.pkl'}}
 
 
-# Cargar modelo y scaler
+# Load model and scaler
 @st.cache_resource
 def load_model_and_scaler(model_name):
 
@@ -43,7 +43,7 @@ def load_model_and_scaler(model_name):
 model, scaler = load_model_and_scaler(selected_model)
 
 
-# Inputs usuario
+# User inputs
 st.subheader('🔧 Introduce las variables del mercado')
 
 col1, col2 = st.columns(2)
@@ -69,20 +69,19 @@ with col2:
                                    help='''Para saber este indicador busca el simbolo VIX del S&P 500''')
 
 
-# Mapas categóricos
+# Categorical mappings
 rsi_map = {'Débil (<40)': 0, 'Neutral (40-60)': 1, 'Fuerte (>60)': 2}
-
 vol_map = {'Baja (<20)': 0, 'Media (20-25)': 1, 'Alta (>25)': 2}
 
 
-# Botón predicción
+# Prediction button
 if st.button('🔍 Evaluar escenario'):
 
     X = pd.DataFrame([{'Price_Change_5d': price_change_5d, 'price_vs_sma20': price_vs_sma20, 
                        'rsi_strength': rsi_map[rsi_label], 'Volume_Ratio': volume_ratio, 'vol_level': vol_map[vol_level_label]}])
 
 
-    # Forzar orden exacto del scaler
+    # Force exact feature order required by the scaler
     feature_order = list(scaler.feature_names_in_)
     X = X[feature_order]
 
